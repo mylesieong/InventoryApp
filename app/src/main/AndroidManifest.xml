@@ -25,7 +25,7 @@
                 android:value=".CatalogActivity" />
         </activity>
         <provider
-            android:name=".data.PetProvider"
+            android:name=".data.InventoryProvider"
             android:authorities="com.myles.udacity.inventoryapp"
             android:exported="false" />
     </application>
