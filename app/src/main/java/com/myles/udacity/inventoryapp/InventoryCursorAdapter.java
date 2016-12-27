@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.IntegerRes;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,11 +37,11 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        Log.v("myles", "invoke bindView method");
+        /* debug */ Log.v("myles", "invoke bindView method");
         TextView productNameTextView = (TextView) view.findViewById(R.id.text_product_name);
         TextView quantityTextView = (TextView) view.findViewById(R.id.text_quantity);
         TextView priceTextView = (TextView) view.findViewById(R.id.text_price);
-        Button trackASellButton = (Button)view.findViewById(R.id.button_track_a_sell);
+        Button trackASellButton = (Button) view.findViewById(R.id.button_track_a_sell);
 
         int productNameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_QUANTITY);
@@ -54,31 +55,48 @@ public class InventoryCursorAdapter extends CursorAdapter {
         quantityTextView.setText(Integer.toString(quantity) + " pcs ");
         priceTextView.setText("$" + Integer.toString(price));
 
-        Log.v("myles_debug", "current id is:" + cursor.getLong(cursor.getColumnIndex("_id")));
-        IdLocationListener buttonOnClickListener = new IdLocationListener();
-        buttonOnClickListener.setId(cursor.getLong(cursor.getColumnIndex("_id"))).setContext(context);
-        trackASellButton.setOnClickListener(buttonOnClickListener);
-
-        IdLocationListener viewOnClickListener = new IdLocationListener();
-        viewOnClickListener.setId(cursor.getLong(cursor.getColumnIndex("_id"))).setContext(context);
-        view.setOnClickListener(viewOnClickListener);
+        /* debug */ Log.v("myles_debug", "current id is:" + cursor.getLong(cursor.getColumnIndex("_id")));
+        trackASellButton.setOnClickListener(new TrackSaleButtonListenerWithId(context, cursor.getLong(cursor.getColumnIndex("_id"))));
+        view.setOnClickListener(new JumpToEditorListenerWithId(context, cursor.getLong(cursor.getColumnIndex("_id"))));
     }
 
     /**
-     * Customer Listener to record certain db record id
+     * Customer Abstract Listener to record certain db record id
      */
-    private class IdLocationListener implements View.OnClickListener{
-        private Long mId;
-        private Context mContext;
+    private abstract class AbstractListenerWithId implements View.OnClickListener {
+        protected long mId;
+        protected Context mContext;
 
-        public IdLocationListener setId(Long id){
-            this.mId = id;
-            return this;
+        public AbstractListenerWithId() {
+            super();
         }
 
-        public IdLocationListener setContext(Context context){
+        public AbstractListenerWithId(Context context, long id) {
             this.mContext = context;
-            return this;
+            this.mId = id;
+        }
+
+        public void setId(Long id) {
+            this.mId = id;
+        }
+
+        public void setContext(Context context) {
+            this.mContext = context;
+        }
+
+        public abstract void onClick(View view);
+    }
+
+    /**
+     * Customer Listener for view that is returned to ListView by CursorAdapter
+     */
+    private class JumpToEditorListenerWithId extends AbstractListenerWithId {
+        public JumpToEditorListenerWithId() {
+            super();
+        }
+
+        public JumpToEditorListenerWithId(Context context, long id) {
+            super(context, id);
         }
 
         @Override
@@ -87,6 +105,24 @@ public class InventoryCursorAdapter extends CursorAdapter {
             Uri currentPetUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, mId);
             intent.setData(currentPetUri);
             this.mContext.startActivity(intent);
+        }
+    }
+
+    /**
+     * Customer Listener for button that is returned to ListView by CursorAdapter
+     */
+    private class TrackSaleButtonListenerWithId extends AbstractListenerWithId {
+        public TrackSaleButtonListenerWithId() {
+            super();
+        }
+
+        public TrackSaleButtonListenerWithId(Context context, long id) {
+            super(context, id);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.v("myles_debug", "Invoke Track a sale button onclick method");
         }
     }
 }
