@@ -36,9 +36,10 @@ public class InventoryCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         Log.v("myles", "invoke bindView method");
-        TextView nameTextView = (TextView) view.findViewById(R.id.name);
-        TextView summaryTextView = (TextView) view.findViewById(R.id.summary);
-        Button sellButton = (Button)view.findViewById(R.id.button_sell);
+        TextView productNameTextView = (TextView) view.findViewById(R.id.text_product_name);
+        TextView priceTextView = (TextView) view.findViewById(R.id.text_price);
+        TextView quantityTextView = (TextView) view.findViewById(R.id.text_quantity);
+        Button trackASellButton = (Button)view.findViewById(R.id.button_track_a_sell);
 
         int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PET_NAME);
         int breedColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PET_BREED);
@@ -50,13 +51,14 @@ public class InventoryCursorAdapter extends CursorAdapter {
             petBreed = context.getString(R.string.unknown_breed);
         }
 
-        nameTextView.setText(petName);
-        summaryTextView.setText(petBreed);
+        productNameTextView.setText(petName);
+        priceTextView.setText(petBreed);
+        quantityTextView.setText(petBreed);
 
         Log.v("myles_debug", "current id is:" + cursor.getLong(cursor.getColumnIndex("_id")));
         IdLocationListener buttonOnClickListener = new IdLocationListener();
         buttonOnClickListener.setId(cursor.getLong(cursor.getColumnIndex("_id"))).setContext(context);
-        sellButton.setOnClickListener(buttonOnClickListener);
+        trackASellButton.setOnClickListener(buttonOnClickListener);
 
         IdLocationListener viewOnClickListener = new IdLocationListener();
         viewOnClickListener.setId(cursor.getLong(cursor.getColumnIndex("_id"))).setContext(context);
