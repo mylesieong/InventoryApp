@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.IntegerRes;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,23 +38,21 @@ public class InventoryCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         Log.v("myles", "invoke bindView method");
         TextView productNameTextView = (TextView) view.findViewById(R.id.text_product_name);
-        TextView priceTextView = (TextView) view.findViewById(R.id.text_price);
         TextView quantityTextView = (TextView) view.findViewById(R.id.text_quantity);
+        TextView priceTextView = (TextView) view.findViewById(R.id.text_price);
         Button trackASellButton = (Button)view.findViewById(R.id.button_track_a_sell);
 
-        int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PET_NAME);
-        int breedColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PET_BREED);
+        int productNameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
+        int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_QUANTITY);
+        int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRICE);
 
-        String petName = cursor.getString(nameColumnIndex);
-        String petBreed = cursor.getString(breedColumnIndex);
+        String productName = cursor.getString(productNameColumnIndex);
+        int quantity = cursor.getInt(quantityColumnIndex);
+        int price = cursor.getInt(priceColumnIndex);
 
-        if (TextUtils.isEmpty(petBreed)) {
-            petBreed = context.getString(R.string.unknown_breed);
-        }
-
-        productNameTextView.setText(petName);
-        priceTextView.setText(petBreed);
-        quantityTextView.setText(petBreed);
+        productNameTextView.setText(productName);
+        quantityTextView.setText(Integer.toString(quantity) + " pcs ");
+        priceTextView.setText("$" + Integer.toString(price));
 
         Log.v("myles_debug", "current id is:" + cursor.getLong(cursor.getColumnIndex("_id")));
         IdLocationListener buttonOnClickListener = new IdLocationListener();

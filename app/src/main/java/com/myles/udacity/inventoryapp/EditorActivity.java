@@ -17,31 +17,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.myles.udacity.inventoryapp.data.InventoryContract;
 import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int EXISTING_PET_LOADER = 0;
+    private static final int EXISTING_INVENTORY_LOADER = 0;
 
-    private Uri mCurrentPetUri;
-    private EditText mNameEditText;
-    private EditText mBreedEditText;
-    private EditText mWeightEditText;
-    private Spinner mGenderSpinner;
-    private int mGender = InventoryContract.InventoryEntry.GENDER_UNKNOWN;
-    private boolean mPetHasChanged = false;
+    private Uri mCurrentInventoryUri;
+    private EditText mProductNameEditText;
+    private EditText mQuantityEditText;
+    private EditText mPriceEditText;
+    private boolean mInventoryHasChanged = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            mPetHasChanged = true;
+            mInventoryHasChanged = true;
             return false;
         }
     };
@@ -52,99 +46,54 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.activity_editor);
 
         Intent intent = getIntent();
-        mCurrentPetUri = intent.getData();
+        mCurrentInventoryUri = intent.getData();
 
-        if (mCurrentPetUri == null) {
+        if (mCurrentInventoryUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_pet));
             invalidateOptionsMenu();
         } else {
             setTitle(getString(R.string.editor_activity_title_edit_pet));
-            getLoaderManager().initLoader(EXISTING_PET_LOADER, null, this);
+            getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
         }
 
-        mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
-        mBreedEditText = (EditText) findViewById(R.id.edit_pet_breed);
-        mWeightEditText = (EditText) findViewById(R.id.edit_pet_weight);
-        mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
+        mProductNameEditText = (EditText) findViewById(R.id.edit_pet_name);
+        mQuantityEditText = (EditText) findViewById(R.id.edit_pet_breed);
+        mPriceEditText = (EditText) findViewById(R.id.edit_pet_weight);
 
-        mNameEditText.setOnTouchListener(mTouchListener);
-        mBreedEditText.setOnTouchListener(mTouchListener);
-        mWeightEditText.setOnTouchListener(mTouchListener);
-        mGenderSpinner.setOnTouchListener(mTouchListener);
-
-        setupSpinner();
-    }
-
-    private void setupSpinner() {
-        ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_gender_options, android.R.layout.simple_spinner_item);
-
-        genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
-        mGenderSpinner.setAdapter(genderSpinnerAdapter);
-
-        mGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.gender_male))) {
-                        mGender = InventoryContract.InventoryEntry.GENDER_MALE;
-                    } else if (selection.equals(getString(R.string.gender_female))) {
-                        mGender = InventoryContract.InventoryEntry.GENDER_FEMALE;
-                    } else {
-                        mGender = InventoryContract.InventoryEntry.GENDER_UNKNOWN;
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mGender = InventoryEntry.GENDER_UNKNOWN;
-            }
-        });
+        mProductNameEditText.setOnTouchListener(mTouchListener);
+        mQuantityEditText.setOnTouchListener(mTouchListener);
+        mPriceEditText.setOnTouchListener(mTouchListener);
     }
 
     private void savePet() {
-        String nameString = mNameEditText.getText().toString().trim();
-        String breedString = mBreedEditText.getText().toString().trim();
-        String weightString = mWeightEditText.getText().toString().trim();
+        String productNameString = mProductNameEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
 
-        if (mCurrentPetUri == null &&
-                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(breedString) &&
-                TextUtils.isEmpty(weightString) && mGender == InventoryEntry.GENDER_UNKNOWN) {
+        if (mCurrentInventoryUri == null && TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(priceString)) {
             return;
         }
 
         ContentValues values = new ContentValues();
-        values.put(InventoryContract.InventoryEntry.COLUMN_PET_NAME, nameString);
-        values.put(InventoryContract.InventoryEntry.COLUMN_PET_BREED, breedString);
-        values.put(InventoryEntry.COLUMN_PET_GENDER, mGender);
-        int weight = 0;
-        if (!TextUtils.isEmpty(weightString)) {
-            weight = Integer.parseInt(weightString);
-        }
-        values.put(InventoryContract.InventoryEntry.COLUMN_PET_WEIGHT, weight);
+        values.put(InventoryEntry.COLUMN_PRODUCT_NAME, productNameString);
+        values.put(InventoryEntry.COLUMN_QUANTITY, quantityString);
+        values.put(InventoryEntry.COLUMN_PRICE, TextUtils.isEmpty(priceString)?0:Integer.parseInt(priceString));
 
-        if (mCurrentPetUri == null) {
-            Uri newUri = getContentResolver().insert(InventoryContract.InventoryEntry.CONTENT_URI, values);
+        if (mCurrentInventoryUri == null) {
+            Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
             if (newUri == null) {
-                Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_insert_pet_failed), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_insert_pet_successful),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_insert_pet_successful), Toast.LENGTH_SHORT).show();
             }
         } else {
-            int rowsAffected = getContentResolver().update(mCurrentPetUri, values, null, null);
+            int rowsAffected = getContentResolver().update(mCurrentInventoryUri, values, null, null);
 
             if (rowsAffected == 0) {
-                Toast.makeText(this, getString(R.string.editor_update_pet_failed),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_update_pet_failed), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_update_pet_successful),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_update_pet_successful), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -158,7 +107,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (mCurrentPetUri == null) {
+        if (mCurrentInventoryUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
         }
@@ -176,7 +125,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 showDeleteConfirmationDialog();
                 return true;
             case android.R.id.home:
-                if (!mPetHasChanged) {
+                if (!mInventoryHasChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
                 }
@@ -195,7 +144,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onBackPressed() {
-        if (!mPetHasChanged) {
+        if (!mInventoryHasChanged) {
             super.onBackPressed();
             return;
         }
@@ -213,13 +162,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
-                InventoryContract.InventoryEntry._ID,
-                InventoryContract.InventoryEntry.COLUMN_PET_NAME,
-                InventoryContract.InventoryEntry.COLUMN_PET_BREED,
-                InventoryContract.InventoryEntry.COLUMN_PET_GENDER,
-                InventoryContract.InventoryEntry.COLUMN_PET_WEIGHT };
+                InventoryEntry._ID,
+                InventoryEntry.COLUMN_PRODUCT_NAME,
+                InventoryEntry.COLUMN_QUANTITY,
+                InventoryEntry.COLUMN_PRICE,
+                InventoryEntry.COLUMN_PICTURE };
 
-        return new CursorLoader(this, mCurrentPetUri, projection, null, null, null);
+        return new CursorLoader(this, mCurrentInventoryUri, projection, null, null, null);
     }
 
     @Override
@@ -229,40 +178,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         if (cursor.moveToFirst()) {
-            int nameColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PET_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PET_BREED);
-            int genderColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PET_GENDER);
-            int weightColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PET_WEIGHT);
+            int productNameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
+            int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_QUANTITY);
+            int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRICE);
 
-            String name = cursor.getString(nameColumnIndex);
-            String breed = cursor.getString(breedColumnIndex);
-            int gender = cursor.getInt(genderColumnIndex);
-            int weight = cursor.getInt(weightColumnIndex);
+            String productName = cursor.getString(productNameColumnIndex);
+            String quantity = cursor.getString(quantityColumnIndex);
+            int price = cursor.getInt(priceColumnIndex);
 
-            mNameEditText.setText(name);
-            mBreedEditText.setText(breed);
-            mWeightEditText.setText(Integer.toString(weight));
-
-            switch (gender) {
-                case InventoryContract.InventoryEntry.GENDER_MALE:
-                    mGenderSpinner.setSelection(1);
-                    break;
-                case InventoryEntry.GENDER_FEMALE:
-                    mGenderSpinner.setSelection(2);
-                    break;
-                default:
-                    mGenderSpinner.setSelection(0);
-                    break;
-            }
+            mProductNameEditText.setText(productName);
+            mQuantityEditText.setText(quantity);
+            mPriceEditText.setText(Integer.toString(price));
+            
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mNameEditText.setText("");
-        mBreedEditText.setText("");
-        mWeightEditText.setText("");
-        mGenderSpinner.setSelection(0);
+        mProductNameEditText.setText("");
+        mQuantityEditText.setText("");
+        mPriceEditText.setText("");
     }
 
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
@@ -300,8 +235,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void deletePet() {
-        if (mCurrentPetUri != null) {
-            int rowsDeleted = getContentResolver().delete(mCurrentPetUri, null, null);
+        if (mCurrentInventoryUri != null) {
+            int rowsDeleted = getContentResolver().delete(mCurrentInventoryUri, null, null);
 
             if (rowsDeleted == 0) {
                 Toast.makeText(this, getString(R.string.editor_delete_pet_failed),

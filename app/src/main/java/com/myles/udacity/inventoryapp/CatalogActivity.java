@@ -18,11 +18,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.myles.udacity.inventoryapp.data.InventoryContract;
+import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
 
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int PET_LOADER = 0;
+    private static final int INVENTORY_LOADER = 0;
 
     InventoryCursorAdapter mCursorAdapter;
 
@@ -48,22 +48,22 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         mCursorAdapter = new InventoryCursorAdapter(this, null);
         petListView.setAdapter(mCursorAdapter);
 
-        getLoaderManager().initLoader(PET_LOADER, null, this);
+        getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
-    private void insertPet() {
+    private void insertInventory() {
         ContentValues values = new ContentValues();
-        values.put(InventoryContract.InventoryEntry.COLUMN_PET_NAME, "Toto");
-        values.put(InventoryContract.InventoryEntry.COLUMN_PET_BREED, "Terrier");
-        values.put(InventoryContract.InventoryEntry.COLUMN_PET_GENDER, InventoryContract.InventoryEntry.GENDER_MALE);
-        values.put(InventoryContract.InventoryEntry.COLUMN_PET_WEIGHT, 7);
+        values.put(InventoryEntry.COLUMN_PRODUCT_NAME, "Iphone 7 plus (silver)");
+        values.put(InventoryEntry.COLUMN_QUANTITY, 20);
+        values.put(InventoryEntry.COLUMN_PRICE, 7388);
+        values.put(InventoryEntry.COLUMN_PICTURE, "iphone_7_plus_silver.jpg");
 
-        Uri newUri = getContentResolver().insert(InventoryContract.InventoryEntry.CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
     }
 
-    private void deleteAllPets() {
-        int rowsDeleted = getContentResolver().delete(InventoryContract.InventoryEntry.CONTENT_URI, null, null);
-        Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+    private void deleteAllInventories() {
+        int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from inventory database");
     }
 
     @Override
@@ -76,10 +76,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_insert_dummy_data:
-                insertPet();
+                insertInventory();
                 return true;
             case R.id.action_delete_all_entries:
-                deleteAllPets();
+                deleteAllInventories();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -88,11 +88,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
-                InventoryContract.InventoryEntry._ID,
-                InventoryContract.InventoryEntry.COLUMN_PET_NAME,
-                InventoryContract.InventoryEntry.COLUMN_PET_BREED };
+                InventoryEntry._ID,
+                InventoryEntry.COLUMN_PRODUCT_NAME,
+                InventoryEntry.COLUMN_QUANTITY,
+                InventoryEntry.COLUMN_PRICE};
 
-        return new CursorLoader(this, InventoryContract.InventoryEntry.CONTENT_URI, projection, null, null, null);
+        return new CursorLoader(this, InventoryEntry.CONTENT_URI, projection, null, null, null);
     }
 
     @Override
