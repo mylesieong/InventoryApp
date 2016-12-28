@@ -1,14 +1,11 @@
 package com.myles.udacity.inventoryapp;
 
-import android.content.ContentProvider;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.IntegerRes;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,11 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.myles.udacity.inventoryapp.data.InventoryContract;
 import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
-
-import java.util.concurrent.CopyOnWriteArrayList;
+import com.myles.udacity.inventoryapp.data.InventoryProvider;
 
 public class InventoryCursorAdapter extends CursorAdapter {
 
@@ -102,7 +98,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(this.mContext, EditorActivity.class);
-            Uri currentPetUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, mId);
+            Uri currentPetUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, mId);
             intent.setData(currentPetUri);
             this.mContext.startActivity(intent);
         }
@@ -122,7 +118,50 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
         @Override
         public void onClick(View view) {
-            Log.v("myles_debug", "Invoke Track a sale button onclick method");
+            /**
+             * First, check if the remind quantity is >= 1, if yes, update the record to quantity = quantity -1; if no, give a toast to user
+             */
+            /* General Checking*/
+            Uri currentInventroyUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, mId);
+            if (currentInventroyUri == null){
+                Toast.makeText(mContext, "No items found", Toast.LENGTH_SHORT).show();
+                return ;
+            }
+
+            /* Get current quantity */
+            String[] projection = {
+                    InventoryEntry._ID,
+                    InventoryEntry.COLUMN_QUANTITY
+            };
+            Cursor cursor = mContext.getContentResolver().query(currentInventroyUri, projection, null,null,null);
+            int quantity = 0;
+            if(cursor==null){
+                Toast.makeText(mContext, "Item not found in table", Toast.LENGTH_SHORT).show();
+                return ;
+            }else if (cursor.getCount()<1){
+                Toast.makeText(mContext, "No record fetch from table", Toast.LENGTH_SHORT).show();
+                cursor.close();
+                return ;
+            }else{
+                cursor.moveToFirst();
+                quantity = cursor.getInt(cursor.getColumnIndex(InventoryEntry.COLUMN_QUANTITY));
+                cursor.close();
+            }
+            if (quantity < 1){
+                Toast.makeText(mContext, "Not enought remained stock", Toast.LENGTH_SHORT).show();
+                return ;
+            }
+            /* Set Update quantity */
+            ContentValues values = new ContentValues();
+            values.put(InventoryEntry.COLUMN_QUANTITY, quantity - 1);
+
+            int rowsAffected = mContext.getContentResolver().update(currentInventroyUri, values, null, null);
+
+            if (rowsAffected == 0) {
+                Toast.makeText(mContext, "Update failed", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Update succeed", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
