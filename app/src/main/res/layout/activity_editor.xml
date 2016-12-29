@@ -104,4 +104,33 @@
             style="@style/EditorFieldStyle" />
         </RelativeLayout>
     </LinearLayout>
+
+    <!-- vendor  category -->
+    <LinearLayout
+        android:id="@+id/container_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/category_vendor"
+            style="@style/CategoryStyle" />
+
+        <!-- Input fields -->
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <!-- email  field -->
+            <EditText
+                android:id="@+id/edit_inventory_email"
+                android:hint="@string/hint_inventory_email"
+                android:inputType="textEmailAddress"
+                style="@style/EditorFieldStyle" />
+        </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>
