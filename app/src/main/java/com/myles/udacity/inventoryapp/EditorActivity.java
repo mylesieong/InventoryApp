@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.opengl.EGLDisplay;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.view.LayoutInflater;
 
 import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
 
@@ -144,7 +146,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InventoryEntry.COLUMN_QUANTITY,
                 InventoryEntry.COLUMN_PRICE,
                 InventoryEntry.COLUMN_EMAIL,
-                InventoryEntry.COLUMN_PICTURE };
+                InventoryEntry.COLUMN_PICTURE};
 
         return new CursorLoader(this, mCurrentInventoryUri, projection, null, null, null);
     }
@@ -194,8 +196,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_PRODUCT_NAME, productNameString);
-        values.put(InventoryEntry.COLUMN_QUANTITY, TextUtils.isEmpty(quantityString)?0:Integer.parseInt(quantityString));
-        values.put(InventoryEntry.COLUMN_PRICE, TextUtils.isEmpty(priceString)?0:Integer.parseInt(priceString));
+        values.put(InventoryEntry.COLUMN_QUANTITY, TextUtils.isEmpty(quantityString) ? 0 : Integer.parseInt(quantityString));
+        values.put(InventoryEntry.COLUMN_PRICE, TextUtils.isEmpty(priceString) ? 0 : Integer.parseInt(priceString));
         values.put(InventoryEntry.COLUMN_EMAIL, emailString);
 
         if (mCurrentInventoryUri == null) {
@@ -251,22 +253,38 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
-    /** to be update */
+    /**
+     * to be update
+     */
     private void showModifyQuantityDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_dialog_msg);
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                deleteInventory();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (dialog != null) {
-                    dialog.dismiss();
+        builder.setMessage(R.string.modify_dialog_msg);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_modify_quantity, null);
+        final EditText editText = (EditText) view.findViewById(R.id.edit_new_quantity);
+        builder.setView(view);
+        builder.setPositiveButton(R.string.modify, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        int newQuantity = Integer.parseInt(editText.getText().toString().trim());
+                        if (newQuantity >= 0) {
+                            mQuantityEditText.setText(Integer.toString(newQuantity));
+                            saveInventory();
+                            finish();
+                        } else {
+                            Toast.makeText(EditorActivity.this, getString(R.string.dialog_modify_quantity_less_than_zero), Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }
                 }
-            }
-        });
+
+        );
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                    }
+                }
+        );
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

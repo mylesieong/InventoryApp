@@ -8,14 +8,17 @@
     <string name="editor_insert_inventory_failed">Error with saving inventory</string>
     <string name="editor_update_inventory_successful">Item updated</string>
     <string name="editor_update_inventory_failed">Error with updating inventory</string>
+    <string name="dialog_modify_quantity_less_than_zero">Quantity should not be less than zero</string>
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
     <string name="editor_delete_inventory_successful">Item deleted</string>
     <string name="editor_delete_inventory_failed">Error with deleting inventory</string>
-    <string name="delete_dialog_msg">Delete this inventory?</string>
+    <string name="delete_dialog_msg">Modify inventory quantity</string>
+    <string name="modify_dialog_msg">Delete this inventory?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="modify">Modify</string>
 
     <!-- User Interface Body Used -->
     <string name="empty_view_title_text">Nothing at stock.</string>
@@ -34,5 +37,6 @@
     <string name="action_order_more">Order More</string>
     <string name="category_vendor">Vendor</string>
     <string name="hint_inventory_email">Vendor email</string>
+    <string name="modify_quantity_number_question">What is the quantity should be set to?</string>
 
 </resources>
