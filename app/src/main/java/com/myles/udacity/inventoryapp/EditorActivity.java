@@ -49,23 +49,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCurrentInventoryUri = intent.getData();
 
         if (mCurrentInventoryUri == null) {
-            setTitle(getString(R.string.editor_activity_title_new_pet));
+            setTitle(getString(R.string.editor_activity_title_new_inventory));
             invalidateOptionsMenu();
         } else {
-            setTitle(getString(R.string.editor_activity_title_edit_pet));
+            setTitle(getString(R.string.editor_activity_title_edit_inventory));
             getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
         }
 
-        mProductNameEditText = (EditText) findViewById(R.id.edit_pet_name);
-        mQuantityEditText = (EditText) findViewById(R.id.edit_pet_breed);
-        mPriceEditText = (EditText) findViewById(R.id.edit_pet_weight);
+        mProductNameEditText = (EditText) findViewById(R.id.edit_inventory_name);
+        mQuantityEditText = (EditText) findViewById(R.id.edit_inventory_breed);
+        mPriceEditText = (EditText) findViewById(R.id.edit_inventory_weight);
 
         mProductNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
     }
 
-    private void savePet() {
+    private void saveInventory() {
         String productNameString = mProductNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
@@ -76,24 +76,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_PRODUCT_NAME, productNameString);
-        values.put(InventoryEntry.COLUMN_QUANTITY, quantityString);
+        values.put(InventoryEntry.COLUMN_QUANTITY, TextUtils.isEmpty(quantityString)?0:Integer.parseInt(quantityString));
         values.put(InventoryEntry.COLUMN_PRICE, TextUtils.isEmpty(priceString)?0:Integer.parseInt(priceString));
 
         if (mCurrentInventoryUri == null) {
             Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
             if (newUri == null) {
-                Toast.makeText(this, getString(R.string.editor_insert_pet_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_insert_inventory_failed), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_insert_pet_successful), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_insert_inventory_successful), Toast.LENGTH_SHORT).show();
             }
         } else {
             int rowsAffected = getContentResolver().update(mCurrentInventoryUri, values, null, null);
 
             if (rowsAffected == 0) {
-                Toast.makeText(this, getString(R.string.editor_update_pet_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_update_inventory_failed), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_update_pet_successful), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_update_inventory_successful), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -118,7 +118,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                savePet();
+                saveInventory();
                 finish();
                 return true;
             case R.id.action_delete:
@@ -220,7 +220,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                deletePet();
+                deleteInventory();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -234,15 +234,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
-    private void deletePet() {
+    private void deleteInventory() {
         if (mCurrentInventoryUri != null) {
             int rowsDeleted = getContentResolver().delete(mCurrentInventoryUri, null, null);
 
             if (rowsDeleted == 0) {
-                Toast.makeText(this, getString(R.string.editor_delete_pet_failed),
+                Toast.makeText(this, getString(R.string.editor_delete_inventory_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.editor_delete_pet_successful),
+                Toast.makeText(this, getString(R.string.editor_delete_inventory_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }

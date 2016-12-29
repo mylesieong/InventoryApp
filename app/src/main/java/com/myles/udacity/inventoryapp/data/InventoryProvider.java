@@ -88,10 +88,11 @@ public class InventoryProvider extends ContentProvider {
         }
 
         //Read and cleanse the picture
+        /**
         String picture = values.getAsString(InventoryEntry.COLUMN_PICTURE);
         if (picture == null) {
             throw new IllegalArgumentException("Inventory requires a product picture");
-        }
+        }*/
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -138,7 +139,7 @@ public class InventoryProvider extends ContentProvider {
 
         if (values.containsKey(InventoryEntry.COLUMN_PRICE)) {
             Integer price = values.getAsInteger(InventoryEntry.COLUMN_PRICE);
-            if (price != null || price < 0) {
+            if (price == null || price < 0) {
                 throw new IllegalArgumentException("Price should be greater or equal to zero");
             }
         }

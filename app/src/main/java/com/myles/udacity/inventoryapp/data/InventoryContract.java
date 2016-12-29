@@ -12,8 +12,6 @@ public final class InventoryContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    //public static final String PATH_INVENTORY = "pets";
-
     public static final class InventoryEntry implements BaseColumns {
 
         public final static String TABLE_NAME = "inventory";

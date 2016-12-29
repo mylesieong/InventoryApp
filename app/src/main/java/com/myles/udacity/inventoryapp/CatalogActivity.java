@@ -51,40 +51,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
-    private void insertInventory() {
-        ContentValues values = new ContentValues();
-        values.put(InventoryEntry.COLUMN_PRODUCT_NAME, "Iphone 7 plus (silver)");
-        values.put(InventoryEntry.COLUMN_QUANTITY, 20);
-        values.put(InventoryEntry.COLUMN_PRICE, 7388);
-        values.put(InventoryEntry.COLUMN_PICTURE, "iphone_7_plus_silver.jpg");
-
-        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
-    }
-
-    private void deleteAllInventories() {
-        int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
-        Log.v("CatalogActivity", rowsDeleted + " rows deleted from inventory database");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_catalog, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_insert_dummy_data:
-                insertInventory();
-                return true;
-            case R.id.action_delete_all_entries:
-                deleteAllInventories();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
