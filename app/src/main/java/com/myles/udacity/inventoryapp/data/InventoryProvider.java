@@ -87,13 +87,6 @@ public class InventoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Price should be greatar or equal to zero");
         }
 
-        //Read and cleanse the picture
-        /**
-        String picture = values.getAsString(InventoryEntry.COLUMN_PICTURE);
-        if (picture == null) {
-            throw new IllegalArgumentException("Inventory requires a product picture");
-        }*/
-
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         long id = database.insert(InventoryEntry.TABLE_NAME, null, values);

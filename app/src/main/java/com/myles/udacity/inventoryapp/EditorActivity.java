@@ -57,8 +57,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         mProductNameEditText = (EditText) findViewById(R.id.edit_inventory_name);
-        mQuantityEditText = (EditText) findViewById(R.id.edit_inventory_breed);
-        mPriceEditText = (EditText) findViewById(R.id.edit_inventory_weight);
+        mQuantityEditText = (EditText) findViewById(R.id.edit_inventory_quantity);
+        mPriceEditText = (EditText) findViewById(R.id.edit_inventory_price);
 
         mProductNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);

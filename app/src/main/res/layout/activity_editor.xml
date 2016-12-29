@@ -34,54 +34,19 @@
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
 
-            <!-- Breed field -->
-            <EditText
-                android:id="@+id/edit_inventory_breed"
-                android:hint="@string/hint_inventory_breed"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Gender category -->
+    <!-- Quantity  category -->
     <LinearLayout
-        android:id="@+id/container_gender"
+        android:id="@+id/container_quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_gender"
-            style="@style/CategoryStyle" />
-
-        <!-- Input field -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <!-- Gender drop-down spinner -->
-            <Spinner
-                android:id="@+id/spinner_gender"
-                android:layout_height="48dp"
-                android:layout_width="wrap_content"
-                android:paddingRight="16dp"
-                android:spinnerMode="dropdown"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Measurement category -->
-    <LinearLayout
-        android:id="@+id/container_measurement"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Label -->
-        <TextView
-            android:text="@string/category_measurement"
+            android:text="@string/category_quantity"
             style="@style/CategoryStyle" />
 
         <!-- Input fields -->
@@ -91,18 +56,52 @@
             android:layout_weight="2"
             android:paddingLeft="4dp">
 
-            <!-- Weight field -->
+            <!-- Quantity field -->
             <EditText
-                android:id="@+id/edit_inventory_weight"
-                android:hint="@string/hint_inventory_weight"
+                android:id="@+id/edit_inventory_quantity"
+                android:hint="@string/hint_inventory_quantity"
                 android:inputType="number"
                 style="@style/EditorFieldStyle" />
 
-            <!-- Units for weight (kg) -->
+            <!-- Units for quantity (pcs) -->
             <TextView
-                android:id="@+id/label_weight_units"
-                android:text="@string/unit_inventory_weight"
+                android:id="@+id/label_weight_quantity"
+                android:text="@string/unit_inventory_quantity"
                 style="@style/EditorUnitsStyle"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- Price  category -->
+    <LinearLayout
+        android:id="@+id/container_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/category_price"
+            style="@style/CategoryStyle" />
+
+        <!-- Input fields -->
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <!-- Units for price ($) -->
+            <TextView
+                android:id="@+id/label_price_units"
+                android:text="@string/unit_inventory_price"
+                style="@style/EditorPrefixsStyle"/>
+
+            <!-- Weight field -->
+            <EditText
+            android:id="@+id/edit_inventory_price"
+            android:hint="@string/hint_inventory_price"
+            android:inputType="number"
+            style="@style/EditorFieldStyle" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
