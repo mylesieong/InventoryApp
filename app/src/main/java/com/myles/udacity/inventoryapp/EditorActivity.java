@@ -232,7 +232,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mEmailEditText.setText(email);
 
             if (picture != null && !picture.equals("")) {
-                File imageFile = new File(this.getFilesDir() + "/" + picture);    //picture field includes the file type suffix (jpg/png/whatever)
+                File imageFile = new File(this.getFilesDir() + File.separator + picture);    //picture field includes the file type suffix (jpg/png/whatever)
                 if (imageFile.exists()) {
                     Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
                     mPictureImage.setImageBitmap(imageBitmap);

@@ -84,7 +84,7 @@ public class InventoryProvider extends ContentProvider {
         //Read and cleanse the price
         Integer price = values.getAsInteger(InventoryEntry.COLUMN_PRICE);
         if (price == null || price < 0) {
-            throw new IllegalArgumentException("Price should be greatar or equal to zero");
+            throw new IllegalArgumentException("Price should be greater or equal to zero");
         }
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();

@@ -77,7 +77,7 @@
 
             <!-- Units for quantity (pcs) -->
             <TextView
-                android:id="@+id/label_weight_quantity"
+                android:id="@+id/label_quantity_unit"
                 style="@style/EditorUnitsStyle"
                 android:text="@string/unit_inventory_quantity" />
         </RelativeLayout>
@@ -111,7 +111,7 @@
                 style="@style/EditorPrefixsStyle"
                 android:text="@string/unit_inventory_price" />
 
-            <!-- Weight field -->
+            <!-- Price field -->
             <EditText
                 android:id="@+id/edit_inventory_price"
                 style="@style/EditorFieldStyle"

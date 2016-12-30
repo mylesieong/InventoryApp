@@ -27,13 +27,11 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        Log.v("myles", "invoke newView method");
         return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        /* debug */ Log.v("myles", "invoke bindView method");
         TextView productNameTextView = (TextView) view.findViewById(R.id.text_product_name);
         TextView quantityTextView = (TextView) view.findViewById(R.id.text_quantity);
         TextView priceTextView = (TextView) view.findViewById(R.id.text_price);
@@ -48,10 +46,9 @@ public class InventoryCursorAdapter extends CursorAdapter {
         int price = cursor.getInt(priceColumnIndex);
 
         productNameTextView.setText(productName);
-        quantityTextView.setText(Integer.toString(quantity) + " pcs ");
-        priceTextView.setText("$" + Integer.toString(price));
+        quantityTextView.setText(Integer.toString(quantity).concat(context.getString(R.string.unit_inventory_quantity)));
+        priceTextView.setText(context.getString(R.string.unit_inventory_price).concat(Integer.toString(price)));
 
-        /* debug */ Log.v("myles_debug", "current id is:" + cursor.getLong(cursor.getColumnIndex("_id")));
         trackASellButton.setOnClickListener(new TrackSaleButtonListenerWithId(context, cursor.getLong(cursor.getColumnIndex("_id"))));
         view.setOnClickListener(new JumpToEditorListenerWithId(context, cursor.getLong(cursor.getColumnIndex("_id"))));
     }
@@ -116,11 +113,9 @@ public class InventoryCursorAdapter extends CursorAdapter {
             super(context, id);
         }
 
+        /* Check if the remind quantity is >= 1, if yes, update the record to quantity = quantity -1; if no, give a toast to user  */
         @Override
         public void onClick(View view) {
-            /**
-             * First, check if the remind quantity is >= 1, if yes, update the record to quantity = quantity -1; if no, give a toast to user
-             */
             /* General Checking*/
             Uri currentInventroyUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, mId);
             if (currentInventroyUri == null){
@@ -151,6 +146,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
                 Toast.makeText(mContext, "Not enought remained stock", Toast.LENGTH_SHORT).show();
                 return ;
             }
+
             /* Set Update quantity */
             ContentValues values = new ContentValues();
             values.put(InventoryEntry.COLUMN_QUANTITY, quantity - 1);
