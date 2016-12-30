@@ -55,7 +55,7 @@
         android:id="@+id/button_track_a_sell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="true"
-        android:text="Track a sale" />
+        style="@style/EditorButtonStyle"
+        android:text="@string/button_track_a_sale" />
 
 </LinearLayout>

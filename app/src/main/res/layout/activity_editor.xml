@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="@dimen/activity_margin"
     tools:context=".EditorActivity">
 
+
     <!-- Overview category -->
     <LinearLayout
+        android:id="@+id/container_overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_overview"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_overview" />
 
         <!-- Input fields -->
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <!-- Name field -->
             <EditText
                 android:id="@+id/edit_inventory_name"
+                style="@style/EditorFieldStyle"
                 android:hint="@string/hint_inventory_name"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
+                android:inputType="textCapWords" />
 
         </LinearLayout>
     </LinearLayout>
@@ -42,32 +43,33 @@
         android:id="@+id/container_quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/container_overview"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_quantity"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_quantity" />
 
         <!-- Input fields -->
         <RelativeLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingLeft="4dp">
 
             <!-- Quantity field -->
             <EditText
                 android:id="@+id/edit_inventory_quantity"
+                style="@style/EditorFieldStyle"
                 android:hint="@string/hint_inventory_quantity"
-                android:inputType="number"
-                style="@style/EditorFieldStyle" />
+                android:inputType="number" />
 
             <!-- Units for quantity (pcs) -->
             <TextView
                 android:id="@+id/label_weight_quantity"
-                android:text="@string/unit_inventory_quantity"
-                style="@style/EditorUnitsStyle"/>
+                style="@style/EditorUnitsStyle"
+                android:text="@string/unit_inventory_quantity" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -76,32 +78,33 @@
         android:id="@+id/container_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/container_quantity"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_price"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_price" />
 
         <!-- Input fields -->
         <RelativeLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingLeft="4dp">
 
             <!-- Units for price ($) -->
             <TextView
                 android:id="@+id/label_price_units"
-                android:text="@string/unit_inventory_price"
-                style="@style/EditorPrefixsStyle"/>
+                style="@style/EditorPrefixsStyle"
+                android:text="@string/unit_inventory_price" />
 
             <!-- Weight field -->
             <EditText
-            android:id="@+id/edit_inventory_price"
-            android:hint="@string/hint_inventory_price"
-            android:inputType="number"
-            style="@style/EditorFieldStyle" />
+                android:id="@+id/edit_inventory_price"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_inventory_price"
+                android:inputType="number" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -110,27 +113,62 @@
         android:id="@+id/container_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/container_price"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_vendor"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_vendor" />
 
         <!-- Input fields -->
         <RelativeLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingLeft="4dp">
 
             <!-- email  field -->
             <EditText
                 android:id="@+id/edit_inventory_email"
+                style="@style/EditorFieldStyle"
                 android:hint="@string/hint_inventory_email"
-                android:inputType="textEmailAddress"
-                style="@style/EditorFieldStyle" />
+                android:inputType="textEmailAddress" />
         </RelativeLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <!-- Bottom button area-->
+    <LinearLayout
+        android:id="@+id/container_bottom_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_modify_quantity"
+            style="@style/EditorButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/button_modify_quantity" />
+
+        <Button
+            android:id="@+id/button_order_more"
+            style="@style/EditorButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/button_order_more" />
+
+        <Button
+            android:id="@+id/button_delete_item"
+            style="@style/EditorBoldButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/button_delete_item" />
+    </LinearLayout>
+
+</RelativeLayout>
+

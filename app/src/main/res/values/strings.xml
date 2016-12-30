@@ -19,6 +19,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="modify">Modify</string>
+    <string name="modify_quantity_number_question">What is the quantity should be set to?</string>
 
     <!-- User Interface Body Used -->
     <string name="empty_view_title_text">Nothing at stock.</string>
@@ -28,15 +29,18 @@
     <string name="category_overview">Overview</string>
     <string name="category_quantity">Quantity</string>
     <string name="category_price">Price</string>
+    <string name="category_vendor">Vendor</string>
     <string name="hint_inventory_name">Product Name</string>
     <string name="hint_inventory_quantity">Quantity</string>
     <string name="hint_inventory_price">Price</string>
+    <string name="hint_inventory_email">Vendor email</string>
     <string name="unit_inventory_price">$</string>
     <string name="unit_inventory_quantity">pcs</string>
     <string name="action_modify_quantity">Modify Qty</string>
     <string name="action_order_more">Order More</string>
-    <string name="category_vendor">Vendor</string>
-    <string name="hint_inventory_email">Vendor email</string>
-    <string name="modify_quantity_number_question">What is the quantity should be set to?</string>
+    <string name="button_modify_quantity">Modify Quantity</string>
+    <string name="button_order_more">Order more</string>
+    <string name="button_delete_item">Delete item</string>
+    <string name="button_track_a_sale">Sale</string>
 
 </resources>

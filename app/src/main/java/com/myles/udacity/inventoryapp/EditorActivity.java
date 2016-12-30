@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.view.LayoutInflater;
@@ -53,9 +54,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         if (mCurrentInventoryUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_inventory));
+            findViewById(R.id.button_modify_quantity).setVisibility(View.GONE);
+            findViewById(R.id.button_order_more).setVisibility(View.GONE);
+            findViewById(R.id.button_delete_item).setVisibility(View.GONE);
             invalidateOptionsMenu();
         } else {
             setTitle(getString(R.string.editor_activity_title_edit_inventory));
+            findViewById(R.id.button_modify_quantity).setVisibility(View.VISIBLE);
+            findViewById(R.id.button_order_more).setVisibility(View.VISIBLE);
+            findViewById(R.id.button_delete_item).setVisibility(View.VISIBLE);
             getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
         }
 
