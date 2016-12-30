@@ -118,6 +118,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mEmailEditText = (EditText) findViewById(R.id.edit_inventory_email);
 
         mPictureImage = (ImageView) findViewById(R.id.image_show_picture);
+        mPictureImage.setDrawingCacheEnabled(true);
 
         mProductNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
@@ -294,21 +295,41 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void saveInventory() {
+        /* Get the input value from editText */
         String productNameString = mProductNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String emailString = mEmailEditText.getText().toString().trim();
+        String pictureString = productNameString.replace(' ','_') + ".jpg";
 
         if (mCurrentInventoryUri == null && TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(priceString)) {
             return;
         }
 
+        /* Prepare the to-be-updated values*/
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_PRODUCT_NAME, productNameString);
         values.put(InventoryEntry.COLUMN_QUANTITY, TextUtils.isEmpty(quantityString) ? 0 : Integer.parseInt(quantityString));
         values.put(InventoryEntry.COLUMN_PRICE, TextUtils.isEmpty(priceString) ? 0 : Integer.parseInt(priceString));
         values.put(InventoryEntry.COLUMN_EMAIL, emailString);
+        values.put(InventoryEntry.COLUMN_PICTURE, pictureString);
 
+        /* Save the image file if there is one*/
+        Bitmap newImageBitmap = mPictureImage.getDrawingCache();
+        File imageFile = new File(getFilesDir() + File.separator + pictureString);
+        if (newImageBitmap != null) {
+            try {
+                if (imageFile.exists()){
+                    imageFile.delete();
+                }
+                FileOutputStream out = new FileOutputStream(imageFile);
+                newImageBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        /* Update or Save the value to the database table*/
         if (mCurrentInventoryUri == null) {
             Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
