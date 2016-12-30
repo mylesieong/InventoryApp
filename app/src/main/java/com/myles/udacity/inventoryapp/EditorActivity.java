@@ -52,17 +52,40 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         mCurrentInventoryUri = intent.getData();
 
+        Button modifyQuantityButton = (Button)findViewById(R.id.button_modify_quantity);
+        Button orderMoreButton = (Button)findViewById(R.id.button_order_more);
+        Button deleteItemButton = (Button)findViewById(R.id.button_delete_item);
+
         if (mCurrentInventoryUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_inventory));
-            findViewById(R.id.button_modify_quantity).setVisibility(View.GONE);
-            findViewById(R.id.button_order_more).setVisibility(View.GONE);
-            findViewById(R.id.button_delete_item).setVisibility(View.GONE);
+
+            modifyQuantityButton.setVisibility(View.GONE);
+            orderMoreButton.setVisibility(View.GONE);
+            deleteItemButton.setVisibility(View.GONE);
+
             invalidateOptionsMenu();
         } else {
             setTitle(getString(R.string.editor_activity_title_edit_inventory));
-            findViewById(R.id.button_modify_quantity).setVisibility(View.VISIBLE);
-            findViewById(R.id.button_order_more).setVisibility(View.VISIBLE);
-            findViewById(R.id.button_delete_item).setVisibility(View.VISIBLE);
+
+            modifyQuantityButton.setVisibility(View.VISIBLE);
+            orderMoreButton.setVisibility(View.VISIBLE);
+            deleteItemButton.setVisibility(View.VISIBLE);
+
+            modifyQuantityButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {showModifyQuantityDialog();}
+            });
+            orderMoreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    orderMoreAction();
+                }
+            });
+            deleteItemButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {showDeleteConfirmationDialog();}
+            });
+
             getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
         }
 
