@@ -46,6 +46,7 @@
     <string name="button_track_a_sale">Sale</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="hint_inventory_naming_rule">Product name should not neither be duplicated, nor contain symbols other than numbers, english characters or space.</string>
+    <string name="hint_inventory_naming_rule">Product name should not neither be duplicated, empty, nor contain symbols other than numbers, english characters or space.</string>
+    <string name="editor_empty_product_name_error">Product name should not be empty</string>
 
 </resources>

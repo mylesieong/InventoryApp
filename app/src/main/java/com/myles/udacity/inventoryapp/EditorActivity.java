@@ -75,12 +75,33 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Button orderMoreButton = (Button) findViewById(R.id.button_order_more);
         Button deleteItemButton = (Button) findViewById(R.id.button_delete_item);
 
+        mProductNameEditText = (EditText) findViewById(R.id.edit_inventory_name);
+        mQuantityEditText = (EditText) findViewById(R.id.edit_inventory_quantity);
+        mPriceEditText = (EditText) findViewById(R.id.edit_inventory_price);
+        mEmailEditText = (EditText) findViewById(R.id.edit_inventory_email);
+
+        mPictureImage = (ImageView) findViewById(R.id.image_show_picture);
+        mPictureImage.setDrawingCacheEnabled(true);
+        mPictureImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promptUserForImage();
+            }
+        });
+
+        mProductNameEditText.setOnTouchListener(mTouchListener);
+        mQuantityEditText.setOnTouchListener(mTouchListener);
+        mPriceEditText.setOnTouchListener(mTouchListener);
+        mEmailEditText.setOnTouchListener(mTouchListener);
+
         if (mCurrentInventoryUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_inventory));
 
             modifyQuantityButton.setVisibility(View.GONE);
             orderMoreButton.setVisibility(View.GONE);
             deleteItemButton.setVisibility(View.GONE);
+
+            mPictureImage.setImageResource(R.drawable.ic_add_picture);
 
             invalidateOptionsMenu();
         } else {
@@ -92,9 +113,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             modifyQuantityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    showModifyQuantityDialog();
-                }
+                public void onClick(View v) { showModifyQuantityDialog();}
             });
             orderMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,26 +123,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             });
             deleteItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    showDeleteConfirmationDialog();
-                }
+                public void onClick(View v) { showDeleteConfirmationDialog(); }
             });
 
             getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
         }
-
-        mProductNameEditText = (EditText) findViewById(R.id.edit_inventory_name);
-        mQuantityEditText = (EditText) findViewById(R.id.edit_inventory_quantity);
-        mPriceEditText = (EditText) findViewById(R.id.edit_inventory_price);
-        mEmailEditText = (EditText) findViewById(R.id.edit_inventory_email);
-
-        mPictureImage = (ImageView) findViewById(R.id.image_show_picture);
-        mPictureImage.setDrawingCacheEnabled(true);
-
-        mProductNameEditText.setOnTouchListener(mTouchListener);
-        mQuantityEditText.setOnTouchListener(mTouchListener);
-        mPriceEditText.setOnTouchListener(mTouchListener);
-        mEmailEditText.setOnTouchListener(mTouchListener);
     }
 
     @Override
@@ -236,19 +240,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 if (imageFile.exists()) {
                     Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
                     mPictureImage.setImageBitmap(imageBitmap);
-                    mPictureImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            promptUserForImage();
-                        }
-                    });
-                } else {
-                    mPictureImage.setVisibility(View.GONE);
                 }
-            } else {
-                mPictureImage.setVisibility(View.GONE);
             }
-
         }
     }
 
@@ -302,7 +295,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String emailString = mEmailEditText.getText().toString().trim();
         String pictureString = productNameString.replace(' ','_') + ".jpg";
 
-        if (mCurrentInventoryUri == null && TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(priceString)) {
+        if (TextUtils.isEmpty(productNameString)) {
+            Toast.makeText(this, getString(R.string.editor_empty_product_name_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -323,7 +317,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     imageFile.delete();
                 }
                 FileOutputStream out = new FileOutputStream(imageFile);
-                newImageBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                newImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             } catch (Exception e) {
                 e.printStackTrace();
             }
