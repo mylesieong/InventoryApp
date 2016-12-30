@@ -14,11 +14,13 @@
     <string name="keep_editing">Keep Editing</string>
     <string name="editor_delete_inventory_successful">Item deleted</string>
     <string name="editor_delete_inventory_failed">Error with deleting inventory</string>
-    <string name="delete_dialog_msg">Modify inventory quantity</string>
-    <string name="modify_dialog_msg">Delete this inventory?</string>
+    <string name="delete_dialog_msg">Delete this inventory?</string>
+    <string name="modify_dialog_msg">Modify inventory quantity</string>
+    <string name="update_image_dialog_msg">Select a new image?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="modify">Modify</string>
+    <string name="update">Update</string>
     <string name="modify_quantity_number_question">What is the quantity should be set to?</string>
 
     <!-- User Interface Body Used -->
@@ -42,5 +44,7 @@
     <string name="button_order_more">Order more</string>
     <string name="button_delete_item">Delete item</string>
     <string name="button_track_a_sale">Sale</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

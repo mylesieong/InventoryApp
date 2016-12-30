@@ -10,10 +10,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.Output;
 import android.net.Uri;
 import android.opengl.EGLDisplay;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -34,10 +36,16 @@ import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int EXISTING_INVENTORY_LOADER = 0;
+    private static final int PICK_IMAGE_REQUEST = 1;  // The image picking request code
 
     private Uri mCurrentInventoryUri;
     private EditText mProductNameEditText;
@@ -63,9 +71,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         mCurrentInventoryUri = intent.getData();
 
-        Button modifyQuantityButton = (Button)findViewById(R.id.button_modify_quantity);
-        Button orderMoreButton = (Button)findViewById(R.id.button_order_more);
-        Button deleteItemButton = (Button)findViewById(R.id.button_delete_item);
+        Button modifyQuantityButton = (Button) findViewById(R.id.button_modify_quantity);
+        Button orderMoreButton = (Button) findViewById(R.id.button_order_more);
+        Button deleteItemButton = (Button) findViewById(R.id.button_delete_item);
 
         if (mCurrentInventoryUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_inventory));
@@ -84,7 +92,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             modifyQuantityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {showModifyQuantityDialog();}
+                public void onClick(View v) {
+                    showModifyQuantityDialog();
+                }
             });
             orderMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,7 +104,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             });
             deleteItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {showDeleteConfirmationDialog();}
+                public void onClick(View v) {
+                    showDeleteConfirmationDialog();
+                }
             });
 
             getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
@@ -218,16 +230,22 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPriceEditText.setText(Integer.toString(price));
             mEmailEditText.setText(email);
 
-            if(picture!= null && !picture.equals("")){
-                File imageFile = new File(this.getFilesDir()+"/"+picture+".jpg");
+            if (picture != null && !picture.equals("")) {
+                File imageFile = new File(this.getFilesDir() + "/" + picture);    //picture field includes the file type suffix (jpg/png/whatever)
                 if (imageFile.exists()) {
-                    Log.v("myles_debug", "image file exists");
                     Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
                     mPictureImage.setImageBitmap(imageBitmap);
-                }else{
-                    Log.v("myles_debug", "image file not exists");
+                    mPictureImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            promptUserForImage();
+                        }
+                    });
+                } else {
                     mPictureImage.setVisibility(View.GONE);
                 }
+            } else {
+                mPictureImage.setVisibility(View.GONE);
             }
 
         }
@@ -239,6 +257,40 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText.setText("");
         mPriceEditText.setText("");
         mEmailEditText.setText("");
+    }
+
+    private void promptUserForImage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.update_image_dialog_msg);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            try {
+                Bitmap newPictureBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                mPictureImage.setImageBitmap(newPictureBitmap);
+            }catch (IOException ioe){
+                ioe.printStackTrace();
+            }
+        }
     }
 
     private void saveInventory() {
@@ -310,9 +362,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
-    /**
-     * to be update
-     */
     private void showModifyQuantityDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.modify_dialog_msg);
