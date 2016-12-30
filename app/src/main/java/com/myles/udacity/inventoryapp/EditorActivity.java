@@ -8,22 +8,32 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.opengl.EGLDisplay;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.LayoutInflater;
 
 import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
+
+import org.w3c.dom.Text;
+
+import java.io.File;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -34,6 +44,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mQuantityEditText;
     private EditText mPriceEditText;
     private EditText mEmailEditText;
+    private ImageView mPictureImage;
     private boolean mInventoryHasChanged = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -93,6 +104,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText = (EditText) findViewById(R.id.edit_inventory_quantity);
         mPriceEditText = (EditText) findViewById(R.id.edit_inventory_price);
         mEmailEditText = (EditText) findViewById(R.id.edit_inventory_email);
+
+        mPictureImage = (ImageView) findViewById(R.id.image_show_picture);
 
         mProductNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
@@ -191,17 +204,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int productNameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
             int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_QUANTITY);
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRICE);
-            int emailColumnIndex = cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_EMAIL);
+            int emailColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_EMAIL);
+            int pictureColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PICTURE);
 
             String productName = cursor.getString(productNameColumnIndex);
             String quantity = cursor.getString(quantityColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
             String email = cursor.getString(emailColumnIndex);
+            String picture = cursor.getString(pictureColumnIndex);
 
             mProductNameEditText.setText(productName);
             mQuantityEditText.setText(quantity);
             mPriceEditText.setText(Integer.toString(price));
             mEmailEditText.setText(email);
+
+            if(picture!= null && !picture.equals("")){
+                File imageFile = new File(this.getFilesDir()+"/"+picture+".jpg");
+                if (imageFile.exists()) {
+                    Log.v("myles_debug", "image file exists");
+                    Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                    mPictureImage.setImageBitmap(imageBitmap);
+                }else{
+                    Log.v("myles_debug", "image file not exists");
+                    mPictureImage.setVisibility(View.GONE);
+                }
+            }
 
         }
     }
