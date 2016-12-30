@@ -428,7 +428,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private void deleteInventory() {
         if (mCurrentInventoryUri != null) {
+            /* Delete the image resource*/
+            String imageFileName = null;
+            Cursor cursor = getContentResolver().query(mCurrentInventoryUri, new String[]{InventoryEntry.COLUMN_PICTURE},null, null, null);
+            if (cursor != null){
+                if(cursor.getCount() == 1){
+                    cursor.moveToFirst();
+                    imageFileName = cursor.getString(cursor.getColumnIndex(InventoryEntry.COLUMN_PICTURE));
+                }
+            }
+            if (imageFileName != null){
+                File imageFile = new File(getFilesDir() + File.separator + imageFileName);
+                if (imageFile.exists()) {
+                    imageFile.delete();
+                }
+            }
+
+            /* Delete record in sql database*/
             int rowsDeleted = getContentResolver().delete(mCurrentInventoryUri, null, null);
+
 
             if (rowsDeleted == 0) {
                 Toast.makeText(this, getString(R.string.editor_delete_inventory_failed),

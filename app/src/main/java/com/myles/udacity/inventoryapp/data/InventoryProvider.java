@@ -167,6 +167,7 @@ public class InventoryProvider extends ContentProvider {
                 selection = InventoryEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
+
                 break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
