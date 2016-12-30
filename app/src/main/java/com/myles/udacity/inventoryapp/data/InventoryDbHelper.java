@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
-import com.myles.udacity.inventoryapp.data.InventoryContract.SaleEntry;
 
 public class InventoryDbHelper extends SQLiteOpenHelper {
 
@@ -33,19 +32,6 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
                 + InventoryEntry.COLUMN_EMAIL + " TEXT);";
 
         db.execSQL(SQL_CREATE_INVENTORY_TABLE);
-
-        /**
-         * Create table "sale"
-         */
-        String SQL_CREATE_SALE_TABLE =  "CREATE TABLE " + InventoryContract.SaleEntry.TABLE_NAME + " ("
-                + SaleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + SaleEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
-                + SaleEntry.COLUMN_QUANTITY + " INTEGER NOT NULL, "
-                + SaleEntry.COLUMN_CATEGORY + " INTEGER NOT NULL, "
-                + SaleEntry.COLUMN_DATE + " INTEGER, "
-                + SaleEntry.COLUMN_TIME + " INTEGER);";
-
-        db.execSQL(SQL_CREATE_SALE_TABLE);
     }
 
     @Override
