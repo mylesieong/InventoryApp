@@ -4,8 +4,12 @@ import android.net.Uri;
 import android.content.ContentResolver;
 import android.provider.BaseColumns;
 
+/*
+ * This class is an informational class for the database tables, it should not be changed or instantiated at runtime.
+ */
 public final class InventoryContract {
 
+    //A private constructor makes sure that the class is not going to be initialised
     private InventoryContract() {}
 
     public static final String CONTENT_AUTHORITY = "com.myles.udacity.inventoryapp";
