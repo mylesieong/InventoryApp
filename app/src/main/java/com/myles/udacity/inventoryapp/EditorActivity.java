@@ -385,15 +385,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         builder.setView(view);
         builder.setPositiveButton(R.string.modify, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        int newQuantity = Integer.parseInt(editText.getText().toString().trim());
-                        if (newQuantity >= 0) {
-                            mQuantityEditText.setText(Integer.toString(newQuantity));
-                            saveInventory();
-                            finish();
-                        } else {
-                            Toast.makeText(EditorActivity.this, getString(R.string.dialog_modify_quantity_less_than_zero), Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                        String userInputText = editText.getText().toString().trim();
+                        /* Validate the user input text */
+                        boolean isValidNumber = true;
+                        int newQuantity = 0;
+                        try{
+                            newQuantity = Integer.parseInt(userInputText);
+                        }catch (NumberFormatException nfe){
+                            isValidNumber = false;
                         }
+                        if (isValidNumber) {
+                            if (newQuantity >= 0) {
+                                mQuantityEditText.setText(Integer.toString(newQuantity));
+                                saveInventory();
+                                finish();
+                            } else {
+                                Toast.makeText(EditorActivity.this, getString(R.string.dialog_modify_quantity_less_than_zero), Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        }else{
+                            Toast.makeText(EditorActivity.this, getString(R.string.dialog_modify_quantity_not_valid_number), Toast.LENGTH_SHORT).show();
+                        };
                     }
                 }
 

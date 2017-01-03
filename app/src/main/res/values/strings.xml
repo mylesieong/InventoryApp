@@ -9,6 +9,7 @@
     <string name="editor_update_inventory_successful">Item updated</string>
     <string name="editor_update_inventory_failed">Error with updating inventory</string>
     <string name="dialog_modify_quantity_less_than_zero">Quantity should not be less than zero</string>
+    <string name="dialog_modify_quantity_not_valid_number">Quantity should be integer</string>
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
