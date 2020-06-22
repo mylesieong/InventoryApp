@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
-import com.myles.udacity.inventoryapp.data.InventoryProvider;
 
 public class InventoryCursorAdapter extends CursorAdapter {
 
@@ -118,9 +115,9 @@ public class InventoryCursorAdapter extends CursorAdapter {
         public void onClick(View view) {
             /* General Checking*/
             Uri currentInventroyUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, mId);
-            if (currentInventroyUri == null){
+            if (currentInventroyUri == null) {
                 Toast.makeText(mContext, "No items found", Toast.LENGTH_SHORT).show();
-                return ;
+                return;
             }
 
             /* Get current quantity */
@@ -128,23 +125,23 @@ public class InventoryCursorAdapter extends CursorAdapter {
                     InventoryEntry._ID,
                     InventoryEntry.COLUMN_QUANTITY
             };
-            Cursor cursor = mContext.getContentResolver().query(currentInventroyUri, projection, null,null,null);
+            Cursor cursor = mContext.getContentResolver().query(currentInventroyUri, projection, null, null, null);
             int quantity = 0;
-            if(cursor==null){
+            if (cursor == null) {
                 Toast.makeText(mContext, "Item not found in table", Toast.LENGTH_SHORT).show();
-                return ;
-            }else if (cursor.getCount()<1){
+                return;
+            } else if (cursor.getCount() < 1) {
                 Toast.makeText(mContext, "No record fetch from table", Toast.LENGTH_SHORT).show();
                 cursor.close();
-                return ;
-            }else{
+                return;
+            } else {
                 cursor.moveToFirst();
                 quantity = cursor.getInt(cursor.getColumnIndex(InventoryEntry.COLUMN_QUANTITY));
                 cursor.close();
             }
-            if (quantity < 1){
+            if (quantity < 1) {
                 Toast.makeText(mContext, "Not enought remained stock", Toast.LENGTH_SHORT).show();
-                return ;
+                return;
             }
 
             /* Set Update quantity */

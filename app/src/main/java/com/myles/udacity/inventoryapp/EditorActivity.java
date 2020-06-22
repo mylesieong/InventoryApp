@@ -10,16 +10,11 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.util.Output;
 import android.net.Uri;
-import android.opengl.EGLDisplay;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,20 +22,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.view.LayoutInflater;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import com.myles.udacity.inventoryapp.data.InventoryContract.InventoryEntry;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -113,7 +104,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             modifyQuantityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) { showModifyQuantityDialog();}
+                public void onClick(View v) {
+                    showModifyQuantityDialog();
+                }
             });
             orderMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,7 +116,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             });
             deleteItemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) { showDeleteConfirmationDialog(); }
+                public void onClick(View v) {
+                    showDeleteConfirmationDialog();
+                }
             });
 
             getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
@@ -281,7 +276,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             try {
                 Bitmap newPictureBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
                 mPictureImage.setImageBitmap(newPictureBitmap);
-            }catch (IOException ioe){
+            } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
         }
@@ -293,7 +288,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String quantityString = mQuantityEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String emailString = mEmailEditText.getText().toString().trim();
-        String pictureString = productNameString.replace(' ','_') + ".jpg";
+        String pictureString = productNameString.replace(' ', '_') + ".jpg";
 
         if (TextUtils.isEmpty(productNameString)) {
             Toast.makeText(this, getString(R.string.editor_empty_product_name_error), Toast.LENGTH_SHORT).show();
@@ -313,7 +308,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         File imageFile = new File(getFilesDir() + File.separator + pictureString);
         if (newImageBitmap != null) {
             try {
-                if (imageFile.exists()){
+                if (imageFile.exists()) {
                     imageFile.delete();
                 }
                 FileOutputStream out = new FileOutputStream(imageFile);
@@ -389,9 +384,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         /* Validate the user input text */
                         boolean isValidNumber = true;
                         int newQuantity = 0;
-                        try{
+                        try {
                             newQuantity = Integer.parseInt(userInputText);
-                        }catch (NumberFormatException nfe){
+                        } catch (NumberFormatException nfe) {
                             isValidNumber = false;
                         }
                         if (isValidNumber) {
@@ -403,9 +398,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                                 Toast.makeText(EditorActivity.this, getString(R.string.dialog_modify_quantity_less_than_zero), Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }
-                        }else{
+                        } else {
                             Toast.makeText(EditorActivity.this, getString(R.string.dialog_modify_quantity_not_valid_number), Toast.LENGTH_SHORT).show();
-                        };
+                        }
+                        ;
                     }
                 }
 
@@ -436,14 +432,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentInventoryUri != null) {
             /* Delete the image resource*/
             String imageFileName = null;
-            Cursor cursor = getContentResolver().query(mCurrentInventoryUri, new String[]{InventoryEntry.COLUMN_PICTURE},null, null, null);
-            if (cursor != null){
-                if(cursor.getCount() == 1){
+            Cursor cursor = getContentResolver().query(mCurrentInventoryUri, new String[]{InventoryEntry.COLUMN_PICTURE}, null, null, null);
+            if (cursor != null) {
+                if (cursor.getCount() == 1) {
                     cursor.moveToFirst();
                     imageFileName = cursor.getString(cursor.getColumnIndex(InventoryEntry.COLUMN_PICTURE));
                 }
             }
-            if (imageFileName != null){
+            if (imageFileName != null) {
                 File imageFile = new File(getFilesDir() + File.separator + imageFileName);
                 if (imageFile.exists()) {
                     imageFile.delete();

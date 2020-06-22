@@ -1,7 +1,7 @@
 package com.myles.udacity.inventoryapp.data;
 
-import android.net.Uri;
 import android.content.ContentResolver;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /*
@@ -9,12 +9,12 @@ import android.provider.BaseColumns;
  */
 public final class InventoryContract {
 
-    //A private constructor makes sure that the class is not going to be initialised
-    private InventoryContract() {}
-
     public static final String CONTENT_AUTHORITY = "com.myles.udacity.inventoryapp";
-
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    //A private constructor makes sure that the class is not going to be initialised
+    private InventoryContract() {
+    }
 
     public static final class InventoryEntry implements BaseColumns {
 

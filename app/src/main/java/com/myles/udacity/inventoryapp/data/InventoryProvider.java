@@ -45,7 +45,7 @@ public class InventoryProvider extends ContentProvider {
                 break;
             case INVENTORY_ID:
                 selection = InventoryEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 cursor = database.query(InventoryEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
@@ -77,7 +77,7 @@ public class InventoryProvider extends ContentProvider {
 
         //Read and cleanse the quantity
         Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_QUANTITY);
-        if (quantity == null || quantity < 0 ) {
+        if (quantity == null || quantity < 0) {
             throw new IllegalArgumentException("Quantity should be greater or equal to zero");
         }
 
@@ -108,7 +108,7 @@ public class InventoryProvider extends ContentProvider {
                 return updateInventory(uri, contentValues, selection, selectionArgs);
             case INVENTORY_ID:
                 selection = InventoryEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateInventory(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -165,7 +165,7 @@ public class InventoryProvider extends ContentProvider {
                 break;
             case INVENTORY_ID:
                 selection = InventoryEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
 
                 break;

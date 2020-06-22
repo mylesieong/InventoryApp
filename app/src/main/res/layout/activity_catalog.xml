@@ -49,12 +49,22 @@
             android:textColor="#A2AAB0"/>
     </RelativeLayout>
 
-    <android.support.design.widget.FloatingActionButton
+<!--    <FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_margin="@dimen/fab_margin"-->
+<!--        android:src="@drawable/ic_add_item"/>-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_add_item"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_item"/>
+        android:contentDescription="submit"
+        android:layout_margin="16dp" />
 </RelativeLayout>
